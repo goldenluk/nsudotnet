@@ -35,9 +35,19 @@ namespace Khadzhiev.Nsudotnet.Calendar
 
             if (DateTime.TryParse(dateString, out _dateValue))
             {
-                Console.Write("Mon\tTue\tWed\tThu\tFri\t");
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.Write("Sat\tSun\n");
+                var date = new DateTime();
+
+                for (var i = 0; i < 7; ++i)
+                {
+                    Console.Write("{0:ddd}\t", date); 
+                    date = date.AddDays(1);
+                    if (i == 5)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                    }
+                }
+                
+                Console.Write("\n");
                 Console.ForegroundColor = ConsoleColor.White;
 
                 var daysInMonth = System.DateTime.DaysInMonth(_dateValue.Year, _dateValue.Month);
@@ -55,32 +65,11 @@ namespace Khadzhiev.Nsudotnet.Calendar
                     Console.ForegroundColor = SetColor();
                     if (i == 1)
                     {
-                        switch (_dateTemp.DayOfWeek)
+                        for (var day = new DateTime(); day.DayOfWeek != _dateTemp.DayOfWeek; day = day.AddDays(1))
                         {
-                            case DayOfWeek.Monday:
-                                Console.Write("  1\t");
-                                break;
-                            case DayOfWeek.Tuesday:
-                                Console.Write("   \t  1\t");
-                                break;
-                            case DayOfWeek.Wednesday:
-                                Console.Write("   \t   \t  1\t");
-                                break;
-                            case DayOfWeek.Thursday:
-                                Console.Write("   \t   \t   \t  1\t");
-                                break;
-                            case DayOfWeek.Friday:
-                                Console.Write("   \t   \t   \t   \t  1\t");
-                                break;
-                            case DayOfWeek.Saturday:
-                                Console.Write("   \t   \t   \t   \t   \t  1\t");
-                                break;
-                            case DayOfWeek.Sunday:
-                                Console.Write("   \t   \t   \t   \t   \t   \t  1\t");
-                                break;
-                            default:
-                                throw new ArgumentOutOfRangeException();
+                            Console.Write("\t");
                         }
+                        Console.Write("1\t");
                     }
                     else
                     {
@@ -88,14 +77,7 @@ namespace Khadzhiev.Nsudotnet.Calendar
                         {
                             Console.WriteLine("");
                         }
-                        if (_dateTemp.Day / 10 == 0)
-                        {
-                            Console.Write("  "+i+"\t");
-                        }
-                        else
-                        {
-                            Console.Write(" "+i+"\t");
-                        }
+                        Console.Write(i+"\t");
                     }
                 }
                 Console.WriteLine("");
