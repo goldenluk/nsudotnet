@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 
 
 namespace NumberGuesser
@@ -7,25 +8,28 @@ namespace NumberGuesser
     {
         public static void Main(string[] args)
         {
-            string [] lox = new string[6];
+            var lox = new[]
+            {
+                "{0}, ты опять не прав, чушка",
+                "Господи иисусе, откуда берутся такие дауны как ты, {0}",
+                "{0},я никогда не видел никого тупее тебя, пёс",
+                "Ну ты и е*ырок, {0}",
+                "Ты просто конченный, {0}",
+                "{0}, уйди отсюда, убогий"
+            };
 
             Console.WriteLine("Представьтесь, пожалуйста");
             var name = Console.ReadLine();
 
-            int [] history = new int[1000];
-
-            lox[0] = string.Format("{0}, ты опять не прав, чушка", name);
-            lox[1] = string.Format("Господи иисусе, откуда берутся такие дауны как ты, {0}", name);
-            lox[2] = string.Format("{0},я никогда не видел никого тупее тебя, пёс", name);
-            lox[3] = string.Format("Ну ты и е*ырок, {0}", name);
-            lox[4] = string.Format("Ты просто конченный, {0}", name);
-            lox[5] = string.Format("{0}, уйди отсюда, убогий", name);
+            int[] history = new int[1000];
 
             var number = new Random().Next(0, 101);
-            Console.WriteLine("Приветствую {0}! Я загадал число от 0 до 100.\nПопробуй его отгадать! "+
+            Console.WriteLine("Приветствую {0}! Я загадал число от 0 до 100.\nПопробуй его отгадать! " +
                               "Время пошло!\nВводи числа", name);
             var strike = 0;
-            var start = DateTime.Now;
+
+            var sWatch = new Stopwatch();
+            sWatch.Start();
 
             while (true)
             {
@@ -38,55 +42,52 @@ namespace NumberGuesser
                 }
 
                 var variant = 0;
-                try
-                {
-                    variant = int.Parse(enter);
 
-                }
-                catch (Exception e)
+                if (!int.TryParse(enter, out variant))
                 {
                     Console.WriteLine("Ты даже не можешь ввести число. Я не хочу с тобой играть!");
                     Console.Read();
                     break;
                 }
 
+
                 history[strike] = variant;
                 ++strike;
 
                 if (variant < number)
                 {
-
                     Console.WriteLine("Твоё число меньше моего");
                     if (strike % 4 == 0)
                     {
-                        Console.WriteLine(lox [new Random().Next(0,6)]);
+                        Console.WriteLine(lox[new Random().Next(0, 6)], name);
                     }
-
                 }
                 if (variant > number)
                 {
                     Console.WriteLine("Твоё число больше моего");
                     if (strike % 4 == 0)
                     {
-                        Console.WriteLine(lox[new Random().Next(0, 7)]);
+                        Console.WriteLine(lox[new Random().Next(0, 6)], name);
                     }
                 }
                 if (variant != number) continue;
 
-                var end = DateTime.Now;
+                sWatch.Stop();
 
                 Console.WriteLine("Ну чтож. Ты угадал. Нажми Enter для закрытия");
                 Console.WriteLine("Всего попыток {0}", strike);
                 Console.WriteLine("Ты вводил:");
 
-                for (var i = 0; i < strike -1; ++i)
+                for (var i = 0; i < strike - 1; ++i)
                 {
                     Console.Write(history[i]);
                     Console.Write(" ");
                     Console.WriteLine(history[i] < number ? "<" : ">");
                 }
 
-                Console.WriteLine("Потрачено времени: {0} минут, {1} секунд", end.Minute - start.Minute, end.Second - start.Second);
+                var tSpan = sWatch.Elapsed;
+
+                Console.WriteLine("Потрачено времени: {0} минут, {1} секунд", tSpan.Minutes, tSpan.Seconds);
 
                 Console.ReadLine();
                 break;
