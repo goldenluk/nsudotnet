@@ -65,7 +65,7 @@ namespace Khadzhiev.Nsudotnet.Calendar
                     Console.ForegroundColor = SetColor();
                     if (i == 1)
                     {
-                        for (var day = new DateTime(); day.DayOfWeek != _dateTemp.DayOfWeek; day = day.AddDays(1))
+                        for (var j = 1; j < (int) _dateTemp.DayOfWeek; j++)
                         {
                             Console.Write("\t");
                         }
